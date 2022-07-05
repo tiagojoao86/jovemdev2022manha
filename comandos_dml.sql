@@ -185,3 +185,36 @@ order by f.film_id
 SELECT string_agg(rental_id::text, '/'), customer_id
 from rental
 group by customer_id;
+
+/*
+ Realizar Select na tabela “inventory” fazendo união com a
+ tabela “film” e mostre o inventory_id e o título do filme
+
+ Realizar Select na tabela “Rental” mostrando a data
+ do aluguel, o nome completo do customer, do staff e o
+ título do filme
+
+ Realizar Select na tabela “Filme” mostrando a
+ lista de nome dos atores, separados por “;”
+
+ */
+
+SELECT i.inventory_id, f.title
+FROM inventory i
+JOIN film f on i.film_id = f.film_id;
+
+SELECT to_char(r.rental_date, 'dd/mm/yyyy') as rental_date,
+       concat(c.first_name, ' ', c.last_name) as customer_full_name,
+       concat(s.first_name, ' ', s.last_name) as staff_full_name,
+       f.title
+FROM rental r
+JOIN customer c on r.customer_id = c.customer_id
+JOIN staff s on r.staff_id = s.staff_id
+JOIN inventory i on r.inventory_id = i.inventory_id
+JOIN film f on i.film_id = f.film_id;
+
+SELECT f.title, string_agg(a.first_name, ';')
+FROM film f
+JOIN film_actor fa on f.film_id = fa.film_id
+JOIN actor a on fa.actor_id = a.actor_id
+GROUP BY f.title;
