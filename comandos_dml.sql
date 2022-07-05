@@ -180,3 +180,8 @@ LEFT JOIN film f ON fa.film_id = f.film_id
 WHERE f.film_id is null
 order by f.film_id
 ;
+
+-- STRING_AGG
+SELECT string_agg(rental_id::text, '/'), customer_id
+from rental
+group by customer_id;
