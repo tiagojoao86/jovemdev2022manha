@@ -109,3 +109,46 @@ GROUP BY customer_id
 HAVING
 COUNT(amount) > 40
 ;
+
+-- # RESOLUÇÃO ATIVIDADE 2
+SELECT SUM(amount) pagamentos,
+       customer_id cod_cliente
+FROM payment
+GROUP BY customer_id
+ORDER BY pagamentos desc
+;
+
+SELECT COUNT(rental_id) qtd_locacoes,
+       customer_id cod_cliente
+FROM rental
+GROUP BY customer_id
+ORDER BY qtd_locacoes ASC;
+
+SELECT max(rental_date) data_locacao,
+       customer_id cod_cliente
+FROM rental
+GROUP BY customer_id
+ORDER BY data_locacao DESC
+LIMIT 1;
+
+SELECT min(rental_date) data_locacao,
+       customer_id cod_cliente
+FROM rental
+GROUP BY customer_id
+ORDER BY data_locacao DESC
+LIMIT 1;
+
+SELECT ROUND(AVG(amount),2) AS pagamento,
+       customer_id
+FROM payment
+GROUP BY customer_id
+ORDER BY pagamento DESC
+;
+
+SELECT SUM(amount) pagamentos,
+       customer_id cod_cliente
+FROM payment
+GROUP BY customer_id
+HAVING
+        SUM(amount) > 200.00
+;
