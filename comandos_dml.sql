@@ -152,3 +152,31 @@ GROUP BY customer_id
 HAVING
         SUM(amount) > 200.00
 ;
+
+--- # JOIN INNER JOIN (JOIN), LEFT JOIN, RIGHT JOIN
+SELECT SUM(p.amount) pagamentos,
+       c.customer_id cod_cliente,
+       c.first_name nom_cliente
+FROM payment p
+INNER JOIN customer c ON p.customer_id = c.customer_id
+--INNER JOIN customer c USING (customer_id)
+GROUP BY c.customer_id, c.first_name
+HAVING
+        SUM(p.amount) > 200.00
+;
+
+SELECT a.actor_id, a.first_name, f.film_id, f.title
+FROM actor a
+RIGHT JOIN film_actor fa ON a.actor_id = fa.actor_id
+RIGHT JOIN film f ON fa.film_id = f.film_id
+WHERE a.actor_id is null
+order by f.film_id
+;
+
+SELECT a.actor_id, a.first_name, f.film_id, f.title
+FROM actor a
+LEFT JOIN film_actor fa ON a.actor_id = fa.actor_id
+LEFT JOIN film f ON fa.film_id = f.film_id
+WHERE f.film_id is null
+order by f.film_id
+;
