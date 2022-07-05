@@ -1,0 +1,1 @@
+sudo docker exec -i postgres-v12 pg_restore -U postgres --role postgres --dbname=newdvdrental --verbose /docker-entrypoint-initdb.d/dvdrental.tar

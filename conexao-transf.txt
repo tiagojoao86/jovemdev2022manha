@@ -1,0 +1,6 @@
+smb://192.168.150.252/transf/
+
+Usuário Registrado
+LOGIN: usuario do ad
+DOMINIO: TRIERSISTEMAS
+SENHA: senha do ad
