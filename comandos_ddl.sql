@@ -68,3 +68,28 @@ select * from rental_vw where rental_id = 2;
 refresh materialized view rental_mvw;
 select * from film where title = 'Freaky Pocus';
 update film set rental_rate = 5.00 where film_id = 333;
+
+  /*
+   Criar uma view materializada sobre pagamentos (payments), onde deverá trazer as informações:
+  Id do pagamento;
+  Nome completo do cliente;
+  Nome completo do funcionário;
+  Valor do pagamento
+  Id da loja onde foi feito o pagamento
+
+   */
+  CREATE MATERIALIZED VIEW payment_mvw AS
+  SELECT p.payment_id,
+         concat(c.first_name, ' ', c.last_name) nome_cliente,
+         concat(s.first_name, ' ', s.last_name) nome_funcionario,
+         p.amount,
+         i.store_id
+  FROM payment p
+           JOIN customer c ON p.customer_id = c.customer_id
+           JOIN staff s ON p.staff_id = s.staff_id
+           JOIN rental r ON r.rental_id = p.rental_id
+           JOIN inventory i on r.inventory_id = i.inventory_id;
+
+  select * from payment_mvw where payment_id = 17503;
+  update payment set amount = 9.00 where payment_id = 17503;
+  refresh materialized view payment_mvw;
