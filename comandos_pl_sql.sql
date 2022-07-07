@@ -80,3 +80,44 @@ $$ language plpgsql;
 select create_nome_completo_ator();
 ALTER TABlE actor DROP COLUMN full_name;
 select * from actor;
+
+-------- TRIGGER ----------
+ALTER TABLE customer ADD COLUMN total_amount numeric DEFAULT 0;
+select * from payment;
+
+CREATE OR REPLACE FUNCTION atualiza_amount_customer_fc() RETURNS TRIGGER AS $$
+    BEGIN
+        RAISE NOTICE 'OP %', TG_OP;
+        IF (TG_OP = 'INSERT') THEN
+            UPDATE customer SET total_amount = COALESCE(total_amount, 0) + NEW.amount
+            WHERE customer_id = NEW.customer_id;
+        END IF;
+        IF (TG_OP = 'UPDATE') THEN
+            UPDATE customer SET total_amount = COALESCE(total_amount, 0) + NEW.amount - OLD.amount
+            WHERE customer_id = NEW.customer_id;
+        END IF;
+
+        RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER atualiza_amount_customer_tg AFTER UPDATE OR INSERT
+    ON payment FOR EACH ROW
+    EXECUTE PROCEDURE atualiza_amount_customer_fc();
+
+-- DROP TRIGGER atualiza_amount_customer_tg ON customer;
+
+SELECT total_amount, * FROM customer WHERE customer_id = 8;
+
+SELECT * FROM rental WHERE customer_id = 8 order by rental_date desc;
+INSERT INTO rental (RENTAL_DATE, INVENTORY_ID, CUSTOMER_ID, RETURN_DATE, STAFF_ID)
+VALUES (NOW(), 2867, 8, NOW() + interval '3' day, 1);
+
+SELECT NOW() + interval '3' day ;
+SELECT * FROM payment WHERE customer_id = 8 ORDER BY payment_date DESC;
+-- 16050
+--DELETE FROM payment WHERE payment_id = 32101;
+INSERT INTO payment (customer_id, staff_id, rental_id, amount, payment_date)
+VALUES (8, 1, 16050, 25.50, NOW());
+
+UPDATE payment SET amount = 50.00 WHERE payment_id = 32102;
