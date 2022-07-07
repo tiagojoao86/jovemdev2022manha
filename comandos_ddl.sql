@@ -48,3 +48,23 @@ FROM staff_vw s
 JOIN rental r on r.staff_id = s.staff_id
 group by s.nome, s.address
 ;
+
+----------- MATERIALIZED VIEW
+CREATE MATERIALIZED VIEW rental_mvw AS
+SELECT r.rental_id,
+       concat(c.first_name, ' ', c.last_name) nome_cliente,
+       concat(s.first_name, ' ', s.last_name) nome_funcionario,
+       f.rental_rate,
+       f.title
+FROM rental r
+         JOIN customer c ON r.customer_id = c.customer_id
+         JOIN staff s ON r.staff_id = s.staff_id
+         JOIN inventory i on r.inventory_id = i.inventory_id
+         JOIN film f ON i.film_id = f.film_id;
+
+select * from rental_mvw where rental_id = 2;
+select * from rental_vw where rental_id = 2;
+
+refresh materialized view rental_mvw;
+select * from film where title = 'Freaky Pocus';
+update film set rental_rate = 5.00 where film_id = 333;
