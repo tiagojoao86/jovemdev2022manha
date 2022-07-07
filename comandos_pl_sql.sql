@@ -121,3 +121,50 @@ INSERT INTO payment (customer_id, staff_id, rental_id, amount, payment_date)
 VALUES (8, 1, 16050, 25.50, NOW());
 
 UPDATE payment SET amount = 50.00 WHERE payment_id = 32102;
+
+/*
+3 - Crie uma trigger para que sempre que for inserido um ator novo,
+preencha a coluna criada na tarefa anterior com o nome completo do ator
+(nome sobrenome);
+ */
+CREATE OR REPLACE FUNCTION preenche_full_name_fc() RETURNS TRIGGER AS $$
+    BEGIN
+        IF (TG_OP = 'INSERT') THEN
+            /* QUANDO AFTER
+            UPDATE actor SET full_name = first_name || ' ' || last_name
+            WHERE actor_id = NEW.actor_id;*/
+
+            /* QUANDO BEFORE */
+            NEW.full_name = NEW.first_name || ' ' || NEW.last_name;
+        END IF;
+        IF (TG_OP = 'UPDATE') THEN
+            /* QUANDO AFTER
+                UPDATE actor SET full_name = first_name || ' ' || last_name
+                WHERE actor_id = NEW.actor_id;
+
+                QUANDO A TRIGGER FAZ UPDATE NA TABELA A QUAL ELA ESTÁ ASSOCIADA
+               NÃO PODEMOS CHAMAR O COMANDO DE UPDATE POIS, ELE IRÁ
+               ACIONAR A TRIGGER NOVAMENTE
+             */
+            /* QUANDO BEFORE */
+            NEW.full_name = NEW.first_name || ' ' || NEW.last_name;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER preenche_full_name_tg BEFORE UPDATE OR INSERT
+    ON actor FOR EACH ROW
+EXECUTE PROCEDURE preenche_full_name_fc();
+
+drop trigger preenche_full_name_tg on actor;
+
+insert into actor (first_name, last_name)
+values ('Tiago', 'Pereira') RETURNING actor_id;
+
+insert into actor (first_name, last_name)
+values ('João', 'Pereira') RETURNING actor_id;
+
+SELECT * FROM actor WHERE actor_id = 206;
+select * from actor where actor_id = 208;
