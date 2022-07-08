@@ -1,0 +1,26 @@
+package br.com.jovemdev.dvdrental.service.impl;
+
+import br.com.jovemdev.dvdrental.entity.StaffEntity;
+import br.com.jovemdev.dvdrental.repository.StaffEntityRepository;
+import br.com.jovemdev.dvdrental.service.StaffEntityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class StaffEntityServiceImpl implements StaffEntityService {
+
+    @Autowired
+    private StaffEntityRepository repository;
+
+    @Override
+    public List<StaffEntity> findAll() {
+        return this.repository.findAll();
+    }
+
+    @Override
+    public StaffEntity save(StaffEntity staffEntity) {
+        return this.repository.save(staffEntity);
+    }
+}
