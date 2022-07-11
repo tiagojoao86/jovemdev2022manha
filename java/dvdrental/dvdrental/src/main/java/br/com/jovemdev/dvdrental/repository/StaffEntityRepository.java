@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface StaffEntityRepository extends JpaRepository<StaffEntity, Long> {
-    List<StaffEntity> findByFirstNameIgnoreCase(String nome);
+public interface StaffEntityRepository extends JpaRepository<StaffEntity, Long>, StaffEntityRepositoryCustom {
+    List<StaffEntity> findByFirstNameContainsIgnoreCase(String nome);
 
     @Query(value = "SELECT * FROM staff WHERE first_name ilike concat('%', ?1, '%')", nativeQuery = true)
     List<StaffEntity> buscarPeloPrimeirNomeSql(String nome);
