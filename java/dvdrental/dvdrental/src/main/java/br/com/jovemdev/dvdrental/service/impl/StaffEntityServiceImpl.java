@@ -26,7 +26,9 @@ public class StaffEntityServiceImpl implements StaffEntityService {
 
     @Override
     public List<StaffEntity> findByFirstNameIgnoreCase(String nome) {
-        return this.repository.findByFirstNameIgnoreCase(nome);
+        //return this.repository.findByFirstNameIgnoreCase(nome);
+        //return this.repository.buscarPeloPrimeirNomeSql(nome);
+        return this.repository.buscarPeloPrimeirNomeJpql(nome);
     }
 
 
