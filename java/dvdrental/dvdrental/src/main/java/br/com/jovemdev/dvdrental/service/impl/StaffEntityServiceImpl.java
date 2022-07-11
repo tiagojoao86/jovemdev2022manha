@@ -23,4 +23,11 @@ public class StaffEntityServiceImpl implements StaffEntityService {
     public StaffEntity save(StaffEntity staffEntity) {
         return this.repository.save(staffEntity);
     }
+
+    @Override
+    public List<StaffEntity> findByFirstNameIgnoreCase(String nome) {
+        return this.repository.findByFirstNameIgnoreCase(nome);
+    }
+
+
 }

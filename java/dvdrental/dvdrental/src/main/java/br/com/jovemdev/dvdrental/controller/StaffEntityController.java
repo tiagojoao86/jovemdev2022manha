@@ -19,6 +19,11 @@ public class StaffEntityController {
         return service.findAll();
     }
 
+    @GetMapping("/listar-por-nome/{nome}")
+    public List<StaffEntity> listarPorNome(@PathVariable String nome) {
+        return service.findByFirstNameIgnoreCase(nome);
+    }
+
     @PostMapping("/cadastrar")
     public StaffEntity cadastrar(@RequestBody StaffEntity entity) {
         return service.save(entity);
